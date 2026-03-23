@@ -31,7 +31,7 @@ export function Contact() {
             </motion.a>
             
             <motion.a
-              href="https://www.linkedin.com/in/sreeharitm"
+              href="https://www.linkedin.com/in/sreehari-t-m-5425951b0/"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
