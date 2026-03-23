@@ -6,19 +6,18 @@ This repository contains the source bundle for Sreehari T M's personal portfolio
 
 - Project type: personal academic and research portfolio
 - Primary focus: AI research, teaching, publications, projects, blogging, and contact links
-- Stack: React, TypeScript, Vite, Tailwind CSS v4, shadcn/ui-style components, Radix UI
+- Stack: React, Vite, Tailwind CSS v4
 - Design direction: clean, modern, academic, and blog-friendly
 
 ## Current Structure
 
 - `app/`: portfolio sections and UI components
 - `styles/`: Tailwind and theme styles
-- `imports/pasted_text/`: source content used to generate the portfolio copy
 - `package.json`, `vite.config.ts`, `postcss.config.mjs`: build configuration
 
 ## Important Note
 
-This started as a partial export from Figma Make or a generated Vite project bundle. The missing Vite entry files have been added so the project now builds as a normal Vite app.
+This started as a generated project export and has been cleaned up into a smaller Vite application. Unused generated folders, helper files, and excess dependencies were removed so the repository is easier to maintain and deploy.
 
 ## Local Development
 
