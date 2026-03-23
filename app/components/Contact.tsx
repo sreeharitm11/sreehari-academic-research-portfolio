@@ -59,7 +59,7 @@ export function Contact() {
             </motion.a>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 text-left">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
             <motion.a
               href="https://orcid.org/0009-0006-3707-0928"
               target="_blank"
@@ -72,6 +72,20 @@ export function Contact() {
                 <ExternalLink className="w-5 h-5" />
               </div>
               <p className="text-gray-300">0009-0006-3707-0928</p>
+            </motion.a>
+
+            <motion.a
+              href="https://www.scopus.com/authid/detail.uri?authorId=60141361300"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -5 }}
+              className="bg-white/10 backdrop-blur-sm p-6 rounded-lg text-white hover:bg-white/20 transition-all"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xl">Scopus Author ID</h3>
+                <ExternalLink className="w-5 h-5" />
+              </div>
+              <p className="text-gray-300">60141361300</p>
             </motion.a>
 
             <motion.a
