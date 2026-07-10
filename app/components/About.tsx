@@ -195,15 +195,34 @@ export function About() {
                 <line x1="100" y1="0" x2="100" y2="120" stroke="currentColor" className="text-border" strokeWidth="0.5" strokeDasharray="4 4" />
 
                 {/* Bangalore Beacon (Pulsing Target) */}
-                <g transform="translate(100, 78)">
-                  {/* Outer sonar ripples */}
-                  <circle cx="0" cy="0" r="12" fill="var(--accent)" className="opacity-20 animate-ping" style={{ animationDuration: '2.5s' }} />
-                  <circle cx="0" cy="0" r="22" fill="var(--accent)" className="opacity-10 animate-ping" style={{ animationDuration: '3.5s' }} />
-                  {/* Inner pulsing point */}
-                  <circle cx="0" cy="0" r="4" fill="var(--accent)" />
-                </g>
+                <circle cx="100" cy="78" r="8" fill="var(--accent)" className="sonar-effect-1" />
+                <circle cx="100" cy="78" r="8" fill="var(--accent)" className="sonar-effect-2" />
+                <circle cx="100" cy="78" r="3.5" fill="var(--accent)" />
               </svg>
             </div>
+
+            {/* Sonar keyframes style block */}
+            <style>{`
+              @keyframes sonar-ripple {
+                0% {
+                  transform: scale(0.3);
+                  opacity: 0.8;
+                }
+                100% {
+                  transform: scale(3.5);
+                  opacity: 0;
+                }
+              }
+              .sonar-effect-1 {
+                animation: sonar-ripple 3s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+                transform-origin: 100px 78px;
+              }
+              .sonar-effect-2 {
+                animation: sonar-ripple 3s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+                animation-delay: 1.5s;
+                transform-origin: 100px 78px;
+              }
+            `}</style>
 
             <div className="relative z-10 flex flex-col justify-between h-full gap-4">
               <MapPin className="w-5 h-5 text-accent animate-bounce" style={{ animationDuration: '3s' }} />
