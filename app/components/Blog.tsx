@@ -1,93 +1,147 @@
 import { motion } from 'motion/react';
-import { BookOpen, Tag } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { fetchSanityPosts, SanityPost } from '../utils/sanity';
 
-const blogPosts = [
+const fallbackPosts = [
   {
-    title: "Understanding Variational Autoencoders for Anomaly Detection",
-    preview: "Exploring how VAEs can be used to detect fraudulent transactions in highly imbalanced datasets, with practical implementation insights.",
-    tags: ["Machine Learning", "Deep Learning", "Fraud Detection"],
-    date: "March 2026"
+    category: 'Deep Learning',
+    title: 'Understanding Variational Autoencoders for Anomaly Detection',
+    excerpt: 'Exploring how VAEs can be used to detect fraudulent transactions in highly imbalanced datasets, with practical implementation insights and ablation study results.',
+    readTime: '10 min read',
+    publishedAt: 'Mar 2026',
   },
   {
-    title: "Building Explainable AI Models for Healthcare",
-    preview: "Why interpretability matters in medical AI and how SHAP values can help clinicians trust machine learning predictions.",
-    tags: ["AI", "Healthcare", "Explainability"],
-    date: "February 2026"
+    category: 'AI · Healthcare',
+    title: 'Building Explainable AI Models for Healthcare',
+    excerpt: 'Why interpretability matters in medical AI and how SHAP values can help clinicians trust machine learning predictions — with a practical knee MRI case study.',
+    readTime: '12 min read',
+    publishedAt: 'Feb 2026',
   },
   {
-    title: "Site Reliability Engineering: Lessons from Production",
-    preview: "Key takeaways from managing large-scale systems, monitoring strategies, and maintaining 99.9% uptime in real-world applications.",
-    tags: ["SRE", "Cloud", "DevOps"],
-    date: "January 2026"
+    category: 'SRE · DevOps',
+    title: 'Site Reliability Engineering: Lessons from Production',
+    excerpt: 'Key takeaways from managing large-scale systems, monitoring strategies, and maintaining 99.9% uptime in real-world applications at NoBroker.',
+    readTime: '8 min read',
+    publishedAt: 'Jan 2026',
   },
   {
-    title: "LoRa Protocol Security: Hybrid Attack Analysis",
-    preview: "Investigating security vulnerabilities in IoT networks using LoRa protocol and proposing defensive strategies for edge devices.",
-    tags: ["Cybersecurity", "IoT", "Research"],
-    date: "December 2025"
+    category: 'Cybersecurity',
+    title: 'LoRa Protocol Security: Hybrid Attack Analysis',
+    excerpt: 'Investigating security vulnerabilities in IoT networks using LoRa protocol and proposing defensive strategies for edge devices in smart infrastructure.',
+    readTime: '9 min read',
+    publishedAt: 'Dec 2025',
   },
   {
-    title: "From Edge to Cloud: Deploying ML Models Efficiently",
-    preview: "Practical guide to deploying TensorFlow Lite models on edge devices like Raspberry Pi while maintaining low latency.",
-    tags: ["Edge AI", "Deployment", "Optimization"],
-    date: "November 2025"
+    category: 'Edge AI',
+    title: 'From Edge to Cloud: Deploying ML Models Efficiently',
+    excerpt: 'Practical guide to deploying TensorFlow Lite models on edge devices like Raspberry Pi while maintaining low latency and acceptable accuracy trade-offs.',
+    readTime: '11 min read',
+    publishedAt: 'Nov 2025',
   },
   {
-    title: "Data Engineering for Medical Imaging Datasets",
-    preview: "Handling large MRI volumes, preprocessing pipelines, and building efficient data loaders for deep learning research.",
-    tags: ["Data Engineering", "Medical Imaging", "PyTorch"],
-    date: "October 2025"
-  }
+    category: 'Data Engineering',
+    title: 'Data Engineering for Medical Imaging Datasets',
+    excerpt: 'Handling large MRI volumes, preprocessing pipelines, and building efficient data loaders for deep learning research with PyTorch and the MRNet dataset.',
+    readTime: '13 min read',
+    publishedAt: 'Oct 2025',
+  },
 ];
 
 export function Blog() {
+  const [posts, setPosts] = useState<SanityPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPosts() {
+      const sanityData = await fetchSanityPosts();
+      if (sanityData && sanityData.length > 0) {
+        setPosts(sanityData);
+      } else {
+        // Fallback to local hardcoded mock data if Sanity is not configured or fails
+        setPosts(fallbackPosts);
+      }
+      setLoading(false);
+    }
+    loadPosts();
+  }, []);
+
   return (
-    <section id="blog" className="py-20 px-6 bg-gradient-to-br from-white to-[#F5F1E8]">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <BookOpen className="w-10 h-10 text-[#4A90A4]" />
-            <h2 className="text-4xl text-[#2C3E50]">Things I'm Learning & Sharing</h2>
+    <section id="blog" className="py-28 px-6 border-t border-border">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-xs uppercase tracking-widest text-muted-foreground mb-4"
+            >
+              From the Desk
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-5xl font-medium tracking-tight"
+            >
+              Thoughts &{' '}
+              <span className="font-display italic text-accent">writings</span>
+            </motion.h2>
           </div>
-          <p className="text-center text-[#5D6D7E] mb-12 max-w-2xl mx-auto">
-            Documenting my journey through AI/ML, cloud systems, cybersecurity, and everything in between
-          </p>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.map((post, index) => (
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="max-w-sm text-muted-foreground text-sm leading-relaxed md:text-right"
+          >
+            Documenting my journey through AI research, medical imaging systems, cloud engineering, and cybersecurity.
+          </motion.p>
+        </div>
+
+        {/* Articles grid */}
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {posts.map((post, i) => (
               <motion.article
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
+                key={post.title}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
                 viewport={{ once: true }}
-                className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
+                className="group rounded-2xl border border-border bg-card p-6 flex flex-col gap-4 hover:border-accent/30 hover:bg-secondary/30 transition-all duration-300 cursor-pointer animate-fade-in"
               >
-                <div className="flex items-center gap-2 text-sm text-[#4A90A4] mb-3">
-                  <Tag className="w-4 h-4" />
-                  <span>{post.date}</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs uppercase tracking-widest text-accent">
+                    {post.category}
+                  </span>
+                  <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
                 </div>
-                <h3 className="text-xl mb-3 text-[#2C3E50]">{post.title}</h3>
-                <p className="text-[#5D6D7E] mb-4 line-clamp-3">{post.preview}</p>
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 bg-[#F5F1E8] text-[#2C3E50] rounded-full text-xs"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+
+                <div className="flex-1">
+                  <h3 className="text-base font-medium text-foreground leading-snug mb-3 group-hover:text-accent transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                    {post.excerpt}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2 border-t border-border">
+                  <span>{post.readTime}</span>
+                  <span>·</span>
+                  <span>{post.publishedAt}</span>
                 </div>
               </motion.article>
             ))}
           </div>
-        </motion.div>
+        )}
       </div>
     </section>
   );

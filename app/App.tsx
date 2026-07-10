@@ -1,4 +1,7 @@
 import { Navigation } from './components/Navigation';
+import { ScrollProgress } from './components/ScrollProgress';
+import { BackToTop } from './components/BackToTop';
+import { Marquee } from './components/Marquee';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
 import { Research } from './components/Research';
@@ -11,10 +14,12 @@ import { Contact } from './components/Contact';
 
 export default function App() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
+      <ScrollProgress />
       <Navigation />
       <main>
         <Hero />
+        <Marquee />
         <About />
         <Research />
         <Projects />
@@ -24,6 +29,7 @@ export default function App() {
         <Publications />
         <Contact />
       </main>
+      <BackToTop />
     </div>
   );
 }
