@@ -10,6 +10,28 @@ export function Contact() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const openCalendly = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const url = 'https://calendly.com/sreeharitm11';
+
+    if ((window as any).Calendly) {
+      (window as any).Calendly.initPopupWidget({ url });
+      return;
+    }
+
+    const link = document.createElement('link');
+    link.href = 'https://assets.calendly.com/assets/external/widget.css';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.onload = () => {
+      (window as any).Calendly.initPopupWidget({ url });
+    };
+    document.body.appendChild(script);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
@@ -183,14 +205,12 @@ export function Contact() {
               <p className="text-muted-foreground text-sm leading-relaxed">
                 Want to discuss a collaboration, research idea, or have an academic question? Let's hop on a quick Google Meet call.
               </p>
-              <a
-                href="https://calendly.com/sreeharitm11"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-accent text-white text-sm font-medium hover:bg-accent/90 transition-all cursor-pointer"
+              <button
+                onClick={openCalendly}
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-accent text-white text-sm font-medium hover:bg-accent/90 transition-all cursor-pointer w-full"
               >
                 Book a 30-min Meet <Calendar size={14} />
-              </a>
+              </button>
             </div>
 
             {/* Direct Contact Links */}
