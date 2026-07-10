@@ -1,9 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { fetchSanityPosts, SanityPost } from '../utils/sanity';
 
-const fallbackPosts = [
+const posts = [
   {
     category: 'Deep Learning',
     title: 'Understanding Variational Autoencoders for Anomaly Detection',
@@ -49,23 +47,6 @@ const fallbackPosts = [
 ];
 
 export function Blog() {
-  const [posts, setPosts] = useState<SanityPost[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadPosts() {
-      const sanityData = await fetchSanityPosts();
-      if (sanityData && sanityData.length > 0) {
-        setPosts(sanityData);
-      } else {
-        // Fallback to local hardcoded mock data if Sanity is not configured or fails
-        setPosts(fallbackPosts);
-      }
-      setLoading(false);
-    }
-    loadPosts();
-  }, []);
-
   return (
     <section id="blog" className="py-28 px-6 border-t border-border">
       <div className="max-w-7xl mx-auto">
@@ -102,46 +83,40 @@ export function Blog() {
         </div>
 
         {/* Articles grid */}
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {posts.map((post, i) => (
-              <motion.article
-                key={post.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                viewport={{ once: true }}
-                className="group rounded-2xl border border-border bg-card p-6 flex flex-col gap-4 hover:border-accent/30 hover:bg-secondary/30 transition-all duration-300 cursor-pointer animate-fade-in"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-widest text-accent">
-                    {post.category}
-                  </span>
-                  <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
-                </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {posts.map((post, i) => (
+            <motion.article
+              key={post.title}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              viewport={{ once: true }}
+              className="group rounded-2xl border border-border bg-card p-6 flex flex-col gap-4 hover:border-accent/30 hover:bg-secondary/30 transition-all duration-300 cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-widest text-accent">
+                  {post.category}
+                </span>
+                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
+              </div>
 
-                <div className="flex-1">
-                  <h3 className="text-base font-medium text-foreground leading-snug mb-3 group-hover:text-accent transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                </div>
+              <div className="flex-1">
+                <h3 className="text-base font-medium text-foreground leading-snug mb-3 group-hover:text-accent transition-colors">
+                  {post.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                  {post.excerpt}
+                </p>
+              </div>
 
-                <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2 border-t border-border">
-                  <span>{post.readTime}</span>
-                  <span>·</span>
-                  <span>{post.publishedAt}</span>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        )}
+              <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2 border-t border-border">
+                <span>{post.readTime}</span>
+                <span>·</span>
+                <span>{post.publishedAt}</span>
+              </div>
+            </motion.article>
+          ))}
+        </div>
       </div>
     </section>
   );
