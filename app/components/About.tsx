@@ -140,19 +140,78 @@ export function About() {
             </div>
           </motion.div>
 
-          {/* Location card */}
+          {/* Location card with animated map beacon */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-border bg-card p-7 flex flex-col justify-between gap-4 hover:border-accent/30 transition-all duration-300"
+            className="rounded-2xl border border-border bg-card p-7 flex flex-col justify-between gap-6 hover:border-accent/30 transition-all duration-300 relative overflow-hidden group min-h-[260px]"
           >
-            <MapPin className="w-5 h-5 text-accent" />
-            <div>
-              <p className="text-sm text-muted-foreground uppercase tracking-widest mb-1">Based in</p>
-              <p className="text-2xl font-medium">Bangalore</p>
-              <p className="text-muted-foreground text-sm mt-1">India · Available globally for research</p>
+            {/* Animated Grid/Map background */}
+            <div className="absolute inset-0 opacity-20 group-hover:opacity-35 transition-opacity duration-500 pointer-events-none flex items-center justify-center bg-[radial-gradient(#1c1c1f_1px,transparent_1px)] [background-size:16px_16px]">
+              <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 200 120"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="absolute inset-0 w-full h-full scale-125 translate-x-4 -translate-y-2"
+              >
+                {/* Abstract Stylized India Dot Grid Map */}
+                <g fill="var(--accent)" className="opacity-40">
+                  {/* Northern India */}
+                  <circle cx="100" cy="15" r="1.5" />
+                  <circle cx="95" cy="20" r="1.5" />
+                  <circle cx="100" cy="22" r="1.5" />
+                  <circle cx="105" cy="20" r="1.5" />
+                  <circle cx="90" cy="28" r="1.5" />
+                  <circle cx="98" cy="28" r="1.5" />
+                  <circle cx="106" cy="28" r="1.5" />
+                  {/* Central India */}
+                  <circle cx="85" cy="38" r="1.5" />
+                  <circle cx="95" cy="38" r="1.5" />
+                  <circle cx="105" cy="38" r="1.5" />
+                  <circle cx="115" cy="38" r="1.5" />
+                  <circle cx="80" cy="48" r="1.5" />
+                  <circle cx="90" cy="48" r="1.5" />
+                  <circle cx="100" cy="48" r="1.5" />
+                  <circle cx="110" cy="48" r="1.5" />
+                  <circle cx="120" cy="48" r="1.5" />
+                  {/* Southern / Peninsula India */}
+                  <circle cx="88" cy="58" r="1.5" />
+                  <circle cx="98" cy="58" r="1.5" />
+                  <circle cx="108" cy="58" r="1.5" />
+                  <circle cx="92" cy="68" r="1.5" />
+                  <circle cx="102" cy="68" r="1.5" />
+                  <circle cx="96" cy="78" r="1.5" />
+                  <circle cx="106" cy="78" r="1.5" />
+                  <circle cx="100" cy="88" r="1.5" />
+                  <circle cx="102" cy="98" r="1.5" />
+                </g>
+
+                {/* Grid guidelines */}
+                <line x1="0" y1="60" x2="200" y2="60" stroke="currentColor" className="text-border" strokeWidth="0.5" strokeDasharray="4 4" />
+                <line x1="100" y1="0" x2="100" y2="120" stroke="currentColor" className="text-border" strokeWidth="0.5" strokeDasharray="4 4" />
+
+                {/* Bangalore Beacon (Pulsing Target) */}
+                <g transform="translate(100, 78)">
+                  {/* Outer sonar ripples */}
+                  <circle cx="0" cy="0" r="12" fill="var(--accent)" className="opacity-20 animate-ping" style={{ animationDuration: '2.5s' }} />
+                  <circle cx="0" cy="0" r="22" fill="var(--accent)" className="opacity-10 animate-ping" style={{ animationDuration: '3.5s' }} />
+                  {/* Inner pulsing point */}
+                  <circle cx="0" cy="0" r="4" fill="var(--accent)" />
+                </g>
+              </svg>
+            </div>
+
+            <div className="relative z-10 flex flex-col justify-between h-full gap-4">
+              <MapPin className="w-5 h-5 text-accent animate-bounce" style={{ animationDuration: '3s' }} />
+              <div>
+                <p className="text-sm text-muted-foreground uppercase tracking-widest mb-1">Based in</p>
+                <p className="text-2xl font-medium">Bangalore</p>
+                <p className="text-muted-foreground text-sm mt-1">India · Available globally for research</p>
+              </div>
             </div>
           </motion.div>
         </div>
