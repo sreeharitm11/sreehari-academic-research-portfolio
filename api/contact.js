@@ -25,10 +25,16 @@ export default async function handler(req, res) {
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   if (!RESEND_API_KEY) {
+    console.error('API Error: RESEND_API_KEY environment variable is not defined.');
     return res.status(500).json({ error: 'Resend API key is not configured' });
   }
 
   try {
+    // Resend free tier strict requirements:
+    // 1. "from" must be exactly 'onboarding@resend.dev' if domain is not verified.
+    // 2. "to" must be the single email address registered with the Resend account.
+    const receiver = process.env.CONTACT_RECEIVER_EMAIL || 'sreeharitm11@gmail.com';
+
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -36,8 +42,8 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Portfolio Contact <onboarding@resend.dev>',
-        to: process.env.CONTACT_RECEIVER_EMAIL || 'sreeharitm11@gmail.com',
+        from: 'onboarding@resend.dev',
+        to: receiver,
         subject: `New portfolio message from ${name}`,
         html: `
           <div style="font-family: sans-serif; padding: 20px; color: #333;">
@@ -55,11 +61,13 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error('Resend API call failed:', data);
       return res.status(response.status).json({ error: data.message || 'Failed to send email' });
     }
 
     return res.status(200).json({ success: true, data });
   } catch (error) {
+    console.error('Server error handling contact request:', error);
     return res.status(500).json({ error: error.message || 'Internal Server Error' });
   }
 }
