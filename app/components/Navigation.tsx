@@ -37,7 +37,7 @@ export function Navigation() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // Active section via IntersectionObserver
+  // Active section via IntersectionObserver + URL hash updater
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
     sectionIds.forEach((id) => {
@@ -45,7 +45,11 @@ export function Navigation() {
       if (!el) return;
       const observer = new IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
+          if (entry.isIntersecting) {
+            setActiveSection(id);
+            // Replace hash state smoothly without adding back history items on scroll
+            window.history.replaceState(null, '', `#${id}`);
+          }
         },
         { threshold: 0.25, rootMargin: '-60px 0px -40% 0px' }
       );
@@ -53,6 +57,16 @@ export function Navigation() {
       observers.push(observer);
     });
     return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  // Scroll to hash section on initial page load
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && sectionIds.includes(hash)) {
+      setTimeout(() => {
+        document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+      }, 400);
+    }
   }, []);
 
   const scrollToSection = (id: string) => {

@@ -1,5 +1,7 @@
 import { motion } from 'motion/react';
-import { Github, ArrowUpRight } from 'lucide-react';
+import { Github, ArrowUpRight, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Playground } from './Playground';
 
 const projects = [
   {
@@ -21,6 +23,7 @@ const projects = [
     impact: 'Sub-0.5s prediction latency · SHAP explanations',
     tags: ['Python', 'Machine Learning', 'Flask', 'SHAP'],
     date: 'Q3 2024',
+    hasDemo: true,
   },
   {
     num: '03',
@@ -105,6 +108,8 @@ const projects = [
 ];
 
 export function Projects() {
+  const [playgroundOpen, setPlaygroundOpen] = useState(false);
+
   return (
     <section id="projects" className="py-28 px-6 border-t border-border">
       <div className="max-w-7xl mx-auto">
@@ -179,6 +184,17 @@ export function Projects() {
                   <p className="text-sm text-accent/80 font-medium">
                     → {project.impact}
                   </p>
+
+                  {/* Interactive Demo Trigger */}
+                  {project.hasDemo && (
+                    <button
+                      onClick={() => setPlaygroundOpen(true)}
+                      className="mt-4 px-4 py-2 text-xs bg-accent/10 text-accent border border-accent/20 rounded-full hover:bg-accent/20 transition-all cursor-pointer flex items-center gap-1.5 w-fit"
+                    >
+                      <Sparkles size={12} className="animate-pulse" />
+                      <span>Try Interactive XAI Demo</span>
+                    </button>
+                  )}
                 </div>
 
                 {/* Tags + Actions */}
@@ -209,6 +225,9 @@ export function Projects() {
           ))}
         </div>
       </div>
+
+      {/* Interactive Playground Modal */}
+      <Playground isOpen={playgroundOpen} onClose={() => setPlaygroundOpen(false)} />
     </section>
   );
 }
