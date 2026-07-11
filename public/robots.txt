@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sreeharitm.vercel.app/sitemap.xml
+Sitemap: https://sreehari-academic-research-portfoli.vercel.app/sitemap.xml
