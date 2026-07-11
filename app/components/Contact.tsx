@@ -4,9 +4,10 @@ import { useState } from 'react';
 
 export function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (status === 'error') setStatus('idle'); // Reset error when user retypes
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -29,6 +30,9 @@ export function Contact() {
     script.onload = () => {
       (window as any).Calendly.initPopupWidget({ url });
     };
+    script.onerror = () => {
+      window.open(url, '_blank');
+    };
     document.body.appendChild(script);
   };
 
@@ -41,9 +45,7 @@ export function Contact() {
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
 
@@ -51,15 +53,13 @@ export function Contact() {
         setStatus('sent');
         setForm({ name: '', email: '', message: '' });
       } else {
-        throw new Error('API Send Failed');
+        const data = await response.json().catch(() => ({}));
+        console.error('Contact API error:', data);
+        setStatus('error');
       }
     } catch (err) {
-      // Fallback to mailto link as fallback since API didn't succeed
-      const subject = encodeURIComponent(`Portfolio Inquiry from ${form.name}`);
-      const body = encodeURIComponent(`Hi Sreehari,\n\n${form.message}\n\nBest regards,\n${form.name}\n${form.email}`);
-      window.open(`mailto:sreeharitm11@gmail.com?subject=${subject}&body=${body}`, '_blank');
-      setStatus('sent');
-      setForm({ name: '', email: '', message: '' });
+      // True network failure — offer mailto fallback
+      setStatus('error');
     }
   };
 
@@ -131,7 +131,9 @@ export function Contact() {
                   onChange={handleChange}
                   placeholder="Your name"
                   required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent/50 transition-colors"
+                  maxLength={100}
+                  aria-label="Your full name"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent/50 focus-visible:ring-2 focus-visible:ring-accent/50 transition-colors"
                 />
               </div>
 
@@ -145,7 +147,9 @@ export function Contact() {
                   onChange={handleChange}
                   placeholder="your@email.com"
                   required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent/50 transition-colors"
+                  maxLength={254}
+                  aria-label="Your email address"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent/50 focus-visible:ring-2 focus-visible:ring-accent/50 transition-colors"
                 />
               </div>
 
@@ -159,23 +163,45 @@ export function Contact() {
                   placeholder="Tell me about your research, collaboration idea, or question..."
                   required
                   rows={4}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent/50 transition-colors resize-none"
+                  maxLength={5000}
+                  aria-label="Your message"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent/50 focus-visible:ring-2 focus-visible:ring-accent/50 transition-colors resize-none"
                 />
+                {form.message.length > 4500 && (
+                  <p className="text-xs text-muted-foreground text-right mt-1">{form.message.length}/5000</p>
+                )}
               </div>
+
+              {status === 'error' && (
+                <div className="flex flex-col gap-1 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                  <p className="text-xs text-red-400 font-medium">Failed to send — please try again or:</p>
+                  <a
+                    href={`mailto:sreeharitm11@gmail.com?subject=${encodeURIComponent(`Portfolio Inquiry from ${form.name}`)}&body=${encodeURIComponent(`Hi Sreehari,\n\n${form.message}\n\nBest,\n${form.name}\n${form.email}`)}`}
+                    className="text-xs text-accent underline underline-offset-2"
+                  >
+                    Click to email directly →
+                  </a>
+                </div>
+              )}
 
               <button
                 type="submit"
                 disabled={status === 'sending' || status === 'sent'}
-                className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium transition-all cursor-pointer ${
+                aria-label="Send your message"
+                className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-accent/50 ${
                   status === 'sent'
                     ? 'bg-accent/20 text-accent border border-accent/30'
+                    : status === 'error'
+                    ? 'bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30'
                     : 'bg-foreground text-background hover:bg-foreground/90'
                 }`}
               >
                 {status === 'sent' ? (
                   '✓ Message sent!'
                 ) : status === 'sending' ? (
-                  'Opening mail...'
+                  <><span className="w-4 h-4 border-2 border-background/40 border-t-background rounded-full animate-spin" /> Sending…</>
+                ) : status === 'error' ? (
+                  'Try again'
                 ) : (
                   <>Send Message <Send size={14} /></>
                 )}

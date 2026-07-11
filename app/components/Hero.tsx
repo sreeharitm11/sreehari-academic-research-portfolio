@@ -1,43 +1,13 @@
 import { motion } from 'motion/react';
 import { ArrowRight, Mail, Copy, Download } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
+import { useCountUp } from '../hooks/useCountUp';
 
-// ─── Inline count-up logic ────────────────────────────────────────────────────
+// ─── StatNumber: uses shared useCountUp hook (no duplicate logic) ─────────────
 function StatNumber({ target, suffix = '' }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const [started, setStarted] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setStarted(true); observer.disconnect(); }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!started) return;
-    let startTime: number | null = null;
-    const duration = 1400;
-    const step = (ts: number) => {
-      if (!startTime) startTime = ts;
-      const progress = Math.min((ts - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
-      else setCount(target);
-    };
-    requestAnimationFrame(step);
-  }, [started, target]);
-
+  const { count, ref } = useCountUp(target, 1400);
   return (
-    <span ref={ref} className="text-3xl font-display italic text-foreground">
+    <span ref={ref as React.RefObject<HTMLSpanElement>} className="text-3xl font-display italic text-foreground">
       {count}{suffix}
     </span>
   );

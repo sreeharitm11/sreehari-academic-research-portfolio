@@ -86,6 +86,10 @@ export function Blog() {
             className="max-w-sm text-muted-foreground text-sm leading-relaxed md:text-right"
           >
             Documenting my journey through AI research, medical imaging systems, cloud engineering, and cybersecurity.
+            Articles published on{' '}
+            <a href="https://medium.com" target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2 hover:opacity-80 transition-opacity">Medium</a>
+            {' '}&amp;{' '}
+            <a href="https://www.linkedin.com/in/sreehari-t-m-5425951b0/" target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2 hover:opacity-80 transition-opacity">LinkedIn</a>.
           </motion.p>
         </div>
 
@@ -98,13 +102,15 @@ export function Blog() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
               viewport={{ once: true }}
-              className="group rounded-2xl border border-border bg-card p-6 flex flex-col gap-4 hover:border-accent/30 hover:bg-secondary/30 transition-all duration-300 cursor-pointer"
+              className="group rounded-2xl border border-border bg-card p-6 flex flex-col gap-4 hover:border-accent/30 hover:bg-secondary/30 transition-all duration-300"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs uppercase tracking-widest text-accent">
                   {post.category}
                 </span>
-                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
+                <span className="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full border border-border text-muted-foreground/60">
+                  Coming soon
+                </span>
               </div>
 
               <div className="flex-1">

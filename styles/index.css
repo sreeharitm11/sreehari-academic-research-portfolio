@@ -1,3 +1,34 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+/* ─── Global Accessibility: Keyboard Focus Rings ─────────────────────────────
+   Visible only via keyboard (not mouse) — WCAG 2.1 AA compliant.
+   Uses the accent colour so the ring matches the site's design language.      */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ─── Typography: prevent overflow on small screens ─────────────────────────  */
+h1, h2, h3 {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* ─── Smooth scroll behaviour for the whole page ───────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ─── Remove default text-decoration on anchor resets ──────────────────────── */
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}

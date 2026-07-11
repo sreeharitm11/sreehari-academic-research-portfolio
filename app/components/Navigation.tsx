@@ -140,8 +140,8 @@ export function Navigation() {
             {/* Theme Toggle */}
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              aria-label="Toggle theme"
-              className="p-2 rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all cursor-pointer"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="p-2 rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-accent/50"
             >
               {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
             </button>
@@ -149,7 +149,8 @@ export function Navigation() {
             {/* CTA */}
             <button
               onClick={() => scrollToSection('contact')}
-              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-all cursor-pointer"
+              aria-label="Navigate to contact section"
+              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-accent/50"
             >
               Let's Connect
             </button>
@@ -157,7 +158,10 @@ export function Navigation() {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav"
+              className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-accent/50 rounded-lg"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
